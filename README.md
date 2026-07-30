@@ -33,7 +33,27 @@ estimativas coerentes com esse valor e precisam da sua revisão.
 
 ---
 
-## Como abrir o site
+### 3. Trocar `SEU-USUARIO` nas meta tags
+
+O `index.html` tem **8 ocorrências** de `SEU-USUARIO`, nas tags `canonical`,
+`og:*`, `twitter:*` e no JSON-LD. Troque pelo seu usuário do GitHub.
+
+Isso não é cosmético: **Open Graph exige URL absoluta**. Com caminho relativo,
+o link compartilhado no WhatsApp e no Instagram aparece sem imagem de
+prévia. Para trocar tudo de uma vez no PowerShell:
+
+```powershell
+$p = "index.html"
+(Get-Content $p -Raw -Encoding UTF8).Replace("SEU-USUARIO", "seu-usuario-real") |
+  Set-Content $p -Encoding UTF8 -NoNewline
+```
+
+Quando tiver domínio próprio, troque `https://seu-usuario.github.io/use-afrodite-pratas`
+por `https://useafroditepratas.com.br`.
+
+---
+
+## Como abrir o site localmente
 
 É HTML estático. Basta abrir o `index.html`. Para o carrinho e as imagens
 funcionarem 100%, prefira servir por HTTP:
@@ -43,6 +63,58 @@ npx serve -l 4321 .
 ```
 
 Depois acesse `http://localhost:4321`.
+
+---
+
+## Publicar no GitHub Pages
+
+O repositório local já está pronto (branch `main`, commit inicial feito).
+
+**1. Crie o repositório vazio** em https://github.com/new
+com o nome `use-afrodite-pratas`, visibilidade **Public**.
+Não marque "Add a README" — o projeto já tem um.
+
+**2. Conecte e envie** (troque `SEU-USUARIO`):
+
+```bash
+git remote add origin https://github.com/SEU-USUARIO/use-afrodite-pratas.git
+git push -u origin main
+```
+
+Na primeira vez o Git abre o navegador para você autorizar sua conta
+(Git Credential Manager). Você autentica direto no GitHub.
+
+**3. Ligue o Pages**: no repositório → **Settings** → **Pages** →
+em "Source" escolha **Deploy from a branch** → branch `main`, pasta `/ (root)`
+→ **Save**.
+
+Em 1–2 minutos o site fica no ar em:
+`https://SEU-USUARIO.github.io/use-afrodite-pratas/`
+
+O arquivo `.nojekyll` na raiz desliga o processamento Jekyll, que é
+desnecessário aqui e só deixaria o deploy mais lento.
+
+### Atualizações depois
+
+```bash
+git add -A
+git commit -m "descrição do que mudou"
+git push
+```
+
+O Pages reconstrói sozinho a cada push.
+
+### ⚠️ Repositório público — o que fica visível
+
+O repo é público, então **as fotos e os 3 vídeos de clientes ficam acessíveis
+e indexáveis por buscadores**, junto com os depoimentos. O material bruto
+(52 MB, incluindo 24 prints de conversa de WhatsApp com clientes) está
+protegido pelo `.gitignore` e **não** sobe — mas confirme que você tem o aceite
+das clientes que aparecem no que vai ao ar.
+
+Se preferir fechar depois: Settings → General → Danger Zone → Change
+visibility. Nesse caso o Pages gratuito para de funcionar; hospede na
+Vercel ou Netlify, que servem repo privado de graça.
 
 ---
 
