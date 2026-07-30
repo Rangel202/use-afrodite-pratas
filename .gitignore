@@ -1,0 +1,55 @@
+# ============================================================
+#  Use Afrodite Pratas 925
+# ============================================================
+
+# ------------------------------------------------------------
+#  Material original enviado pela loja — 52 MB, 84 arquivos
+#  NÃO vai para o repositório, por dois motivos:
+#
+#  1. PRIVACIDADE: contém 24 prints de conversa de WhatsApp e
+#     Direct com clientes (nomes, fotos de perfil, mensagens
+#     pessoais) e 27 vídeos de clientes. Publicar isso num
+#     repositório expõe terceiros que não autorizaram.
+#
+#  2. PESO: são os arquivos brutos (fotos de 3024px, vídeos de
+#     até 5 MB). O site usa versões reduzidas em
+#     assets/images/ — essas sim estão versionadas.
+#
+#  Os originais continuam na sua máquina, intactos.
+#  Faça backup deles à parte (Drive, HD externo).
+# ------------------------------------------------------------
+assets/_originais/
+
+# ------------------------------------------------------------
+#  Sistema operacional
+# ------------------------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+._*
+
+# ------------------------------------------------------------
+#  Editores
+# ------------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*~
+
+# ------------------------------------------------------------
+#  Node (caso algum dia entre build/ferramenta)
+# ------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.env
+.env.local
+
+# ------------------------------------------------------------
+#  Local
+# ------------------------------------------------------------
+*.log
+.cache/

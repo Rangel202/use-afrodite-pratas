@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Use Afrodite Pratas 925">
+  <defs>
+    <!-- caminho invisível para o texto em arco -->
+    <path id="afroArc" d="M 44 128 A 76 76 0 0 1 196 128" fill="none"/>
+    <style>
+      .ring { fill:none; stroke:currentColor; stroke-width:1.1; }
+      .arc-type {
+        font-family:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+        font-size:15px; letter-spacing:5.4px; fill:currentColor;
+      }
+      .mono {
+        font-family:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+        font-size:82px; fill:currentColor;
+      }
+      .sub {
+        font-family:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+        font-size:15px; letter-spacing:1.4px; fill:currentColor;
+      }
+    </style>
+  </defs>
+
+  <!-- anel: aberto no topo, onde a tipografia entra -->
+  <circle class="ring" cx="120" cy="120" r="76"
+          stroke-dasharray="243 234" stroke-dashoffset="-124" />
+
+  <!-- AFRODITE em arco -->
+  <text class="arc-type">
+    <textPath href="#afroArc" startOffset="50%" text-anchor="middle"
+              side="left" dominant-baseline="auto">AFRODITE</textPath>
+  </text>
+
+  <!-- monograma A com haste alongada (swash) -->
+  <g>
+    <text class="mono" x="120" y="146" text-anchor="middle">A</text>
+    <!-- swash: curva descendente saindo da perna esquerda do A -->
+    <path d="M 99 118 C 84 132 76 148 82 160 C 88 172 106 173 114 163"
+          fill="none" stroke="currentColor" stroke-width="1.6"
+          stroke-linecap="round"/>
+    <!-- pétala / folha sobre a barra do A -->
+    <path d="M 118 96 C 112 104 112 112 118 118 C 124 112 124 104 118 96 Z"
+          fill="currentColor"/>
+  </g>
+
+  <!-- assinatura -->
+  <text class="sub" x="120" y="228" text-anchor="middle">Pratas 925</text>
+</svg>
