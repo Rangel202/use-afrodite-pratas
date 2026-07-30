@@ -80,15 +80,30 @@ window.AF = window.AF || {};
 
     document.body.classList.add("is-locked");
 
-    // espera a página carregar, com teto de segurança
-    if (document.readyState === "complete") {
-      setTimeout(finish, 500);
+    /* Antes esperávamos o evento "load", que só dispara depois de TODA
+       imagem da página baixar — inclusive as de baixo, que nem estão
+       na tela. Isso segurava a hero atrás do loader por segundos e
+       piorava a LCP justamente no celular.
+
+       Agora basta a foto da hero estar pronta: é o que a pessoa
+       precisa ver. O resto continua carregando por baixo. */
+    var hero = document.querySelector(".hero__piece img");
+
+    if (hero && hero.decode) {
+      // decode() resolve quando a imagem está pronta para pintar
+      hero
+        .decode()
+        .then(function () { finish(); })
+        .catch(function () { finish(); });
+    } else if (hero && !hero.complete) {
+      hero.addEventListener("load", finish);
+      hero.addEventListener("error", finish);
     } else {
-      window.addEventListener("load", function () {
-        setTimeout(finish, 420);
-      });
+      setTimeout(finish, 300);
     }
-    setTimeout(finish, 4200); // rede lenta não pode travar o site
+
+    // teto de segurança: rede ruim não pode prender a pessoa na tela
+    setTimeout(finish, 2500);
   }
 
   /* ==========================================================
@@ -305,35 +320,77 @@ window.AF = window.AF || {};
     var videos = document.querySelectorAll("video[data-src]");
     if (!videos.length) return;
 
-    if (!("IntersectionObserver" in window)) {
-      videos.forEach(load);
-      return;
-    }
+    /* Os 3 vídeos somam ~1,2 MB. Baixar isso sozinho no plano de dados
+       da cliente é o que mais pesa no celular. Então só damos play
+       automático quando a conexão aguenta; caso contrário mostramos
+       um botão e o vídeo só baixa se ela quiser ver. */
+    var net = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    var slow =
+      !!(net && (net.saveData || /(^|-)2g$/.test(net.effectiveType || "")));
+
+    videos.forEach(function (v) {
+      var fig = v.closest(".reel__item");
+      if (fig) fig.classList.add("is-idle");
+      if (slow) markManual(v);
+    });
+
+    if (!("IntersectionObserver" in window)) return;
 
     var vio = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
           var video = entry.target;
-          if (entry.isIntersecting) {
-            load(video);
-            var playing = video.play();
-            if (playing && playing.catch) playing.catch(function () {});
-          } else if (!video.paused) {
-            video.pause();
+
+          if (!entry.isIntersecting) {
+            if (!video.paused) video.pause();
+            return;
           }
+
+          if (slow) return; // espera o toque da usuária
+          load(video);
+          play(video);
         });
       },
-      { rootMargin: "200px 0px", threshold: 0.25 }
+      // threshold alto: só carrega o vídeo que ela está realmente olhando
+      { rootMargin: "0px", threshold: 0.6 }
     );
 
     videos.forEach(function (v) {
       vio.observe(v);
     });
 
+    /* Clique/toque sempre funciona, mesmo em conexão lenta */
+    document.addEventListener("click", function (e) {
+      var fig = e.target.closest(".reel__item");
+      if (!fig) return;
+      var video = fig.querySelector("video[data-src]");
+      if (!video) return;
+
+      if (video.paused) {
+        load(video);
+        play(video);
+      } else {
+        video.pause();
+        fig.classList.add("is-idle");
+      }
+    });
+
+    function markManual(video) {
+      var fig = video.closest(".reel__item");
+      if (fig) fig.classList.add("is-manual");
+    }
+
     function load(video) {
       if (video.dataset.loaded) return;
       video.src = video.dataset.src;
       video.dataset.loaded = "1";
+    }
+
+    function play(video) {
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
+      var fig = video.closest(".reel__item");
+      if (fig) fig.classList.remove("is-idle");
     }
   }
 

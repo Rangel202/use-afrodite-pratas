@@ -202,11 +202,52 @@ A API ficou compatível (`AF.lenis.stop()` / `.start()` / `.to()`).
 **Sem checkout.** O carrinho monta uma mensagem formatada com produtos,
 quantidades, valores unitários, subtotais e total, e abre `wa.me`.
 
-**Performance.** Imagens com `srcset` + `loading="lazy"`, hero com `preload` e
-`fetchpriority="high"`, vídeos com `preload="none"` (só baixam ao entrar na
-tela), partículas do canvas pausadas quando a hero sai de vista, um único loop
-de `requestAnimationFrame` para todas as animações, fontes sem bloquear a
-renderização.
+**Performance no celular.** Carga inicial de ~1,8 MB para ~170 KB.
+
+| O que era | O que virou |
+|---|---|
+| JPEG em 500px e 900px | WebP em 320/480/640/900 + 1 JPEG de fallback |
+| celular baixava a de 900px (~170 KB por card) | escolhe 480px (~21 KB por card) |
+| hero de 209 KB | 101 KB, e não mais que isso no celular |
+| 3 vídeos (1,2 MB) tocavam sozinhos | só com toque; nada baixa sem pedir |
+| 8 arquivos de fonte | 6 (Cormorant 500 e Jost 300 não eram usados) |
+| capas das coleções eram `background-image` | `<img loading="lazy">`, adiáveis |
+| loader esperava o evento `load` | espera só a foto da hero decodificar |
+| LCP 2,5 s | 1,1 s (CLS 0) |
+
+O erro central era o `sizes`: num celular DPR 3, `50vw` de 390px dá 585px
+reais, então o navegador pulava direto para a imagem de 900px. As versões
+"-sm" de 500px nunca eram usadas.
+
+Também há um bloco em `responsive.css` que corta, só em telas de toque, os
+efeitos caros para a GPU (`mix-blend-mode`, `backdrop-filter` repetido,
+animação de `background-position` e a textura de grão, que cobria 11x a área
+visível). É o que evita a rolagem engasgada.
+
+Demais medidas: `preload` + `fetchpriority="high"` na hero, partículas do
+canvas pausadas quando a hero sai de vista, um único loop de
+`requestAnimationFrame` para todas as animações, fontes sem bloquear a
+renderização e entrada da hero acelerada abaixo de 820px.
+
+### Regerar as imagens
+
+Os arquivos em `assets/images/` são derivados de `assets/_originais/`.
+Os scripts estão em `tools/`. Para recriá-los (precisa de Node):
+
+```bash
+npm install sharp
+node tools/build-images.js
+node tools/build-hero.js
+```
+
+`build-images.js` gera as 14 fotos de produto (4 larguras WebP + fallback) e a
+foto do "sobre". `build-hero.js` refaz só a hero, que usa larguras próprias.
+
+Os recortes de cada foto estão declarados no topo de `build-images.js` — é lá
+que se ajusta o enquadramento, não no editor de imagem.
+
+**Nunca reprocesse a partir de `assets/images/`**, sempre dos originais: cada
+recompressão de um JPEG já comprimido perde qualidade de forma acumulativa.
 
 **Acessibilidade.** Navegação por teclado, foco preso no carrinho aberto,
 `aria-label` em botões de ícone, `prefers-reduced-motion` desliga todo o

@@ -79,7 +79,7 @@ AF.cart = (function () {
     var line = p.price * it.qty;
     return (
       '<article class="ci" data-ci="' + p.id + '">' +
-      '<img class="ci__img" src="' + (p.thumb || p.img) + '" alt="" loading="lazy" decoding="async" width="74" height="74">' +
+      '<img class="ci__img" src="' + AF.imgThumb(p.slug) + '" alt="" loading="lazy" decoding="async" width="74" height="74">' +
       '<div class="ci__mid">' +
       '<span class="ci__cat">' + AF.catLabel(p.cat) + "</span>" +
       '<h3 class="ci__name">' + p.name + "</h3>" +
@@ -227,7 +227,7 @@ AF.cart = (function () {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     var img = sourceEl.querySelector("img");
-    if (!img) return;
+    if (!img || !img.currentSrc && !img.src) return;
 
     var from = img.getBoundingClientRect();
     var to = el.btn.getBoundingClientRect();

@@ -47,6 +47,75 @@
   transform: none;
 }
 
+/* ============================================================
+   PESO GRÁFICO NO CELULAR
+   ------------------------------------------------------------
+   Os efeitos abaixo são bonitos, mas caros para a GPU de um
+   celular e é o que faz a rolagem "engasgar":
+
+   · animar background-position repinta a camada inteira a cada
+     quadro (não é acelerado por hardware como transform)
+   · mix-blend-mode e backdrop-filter forçam o navegador a criar
+     camadas extras e reler o que está atrás
+   · a textura de grão cobria 340% da tela em cada eixo — mais de
+     11x a área visível de memória de vídeo
+
+   Aqui eles são simplificados. O visual continua o mesmo em
+   essência; o que sai é o custo por quadro.
+   ============================================================ */
+@media (hover: none), (pointer: coarse) {
+  /* grão: área muito menor e sem animação */
+  .grain {
+    inset: 0;
+    opacity: 0.028;
+    animation: none;
+  }
+
+  /* fundo cromado da hero: gradiente parado, sem repintura */
+  .hero__chrome {
+    animation: none;
+    background-size: 140% 140%;
+    mix-blend-mode: normal;
+    opacity: 0.1;
+  }
+
+  /* brilho deslizante sobre a foto da hero e a foto do "sobre" */
+  .hero__piece::after,
+  .about__visual::after {
+    display: none;
+  }
+
+  /* selos dos cards: cor sólida no lugar do vidro fosco
+     (eram até 8 camadas de backdrop-filter rolando juntas) */
+  .card__badge {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.94);
+  }
+
+  .card__add {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* desfoques mais baratos */
+  .nav.is-stuck {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  .cart {
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.94);
+  }
+
+  /* a borda gradiente girando no card só existe para o hover do mouse */
+  .card::before {
+    display: none;
+  }
+}
+
 /* ---------------- ≥ 480px — celulares grandes ---------------- */
 @media (min-width: 480px) {
   .grid {

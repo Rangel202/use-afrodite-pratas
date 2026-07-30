@@ -48,18 +48,33 @@ AF.catalog = (function () {
   }
 
   /* ---------- Templates ---------- */
+  /* Largura real do card na tela, por breakpoint. Precisa bater com o
+     grid do CSS: o navegador escolhe a imagem a partir DESTE valor —
+     se ele mentir, ou baixa demais ou renderiza borrado. */
+  var SIZES =
+    "(min-width:1600px) 340px, " +
+    "(min-width:1024px) 23vw, " +
+    "(min-width:820px) 30vw, " +
+    "46vw";
+
   function cardMarkup(p, i) {
     var delay = (i % 4) + 1;
+    // as 4 primeiras imagens aparecem sem rolar: carregam logo
+    var eager = i < 4;
 
     return (
       '<article class="card tilt" data-reveal="up" data-delay="' + delay +
       '" data-card="' + p.id + '">' +
         '<div class="card__media">' +
-          '<img src="' + p.thumb + '" ' +
-               'srcset="' + p.thumb + ' 500w, ' + p.img + ' 900w" ' +
-               'sizes="(min-width:1024px) 25vw, (min-width:820px) 33vw, 50vw" ' +
-               'alt="' + p.name + ' em prata 925" ' +
-               'loading="lazy" decoding="async" width="900" height="900">' +
+          "<picture>" +
+            '<source type="image/webp" srcset="' + AF.imgSet(p.slug) +
+                   '" sizes="' + SIZES + '">' +
+            '<img src="' + AF.imgFallback(p.slug) + '" ' +
+                 'alt="' + p.name + ' em prata 925" ' +
+                 'loading="' + (eager ? "eager" : "lazy") + '" ' +
+                 'fetchpriority="' + (eager ? "high" : "auto") + '" ' +
+                 'decoding="async" width="900" height="900">' +
+          "</picture>" +
           '<span class="card__gleam" aria-hidden="true"></span>' +
           (p.badge ? '<span class="card__badge">' + p.badge + "</span>" : "") +
           '<button type="button" class="card__add" data-add="' + p.id + '" ' +

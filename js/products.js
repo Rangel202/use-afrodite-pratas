@@ -9,8 +9,9 @@
    cat    string  categoria (precisa existir em AF.CATEGORIES)
    price  number  preço em reais
    old    number  preço "de" riscado (opcional)
-   img    string  imagem 900px
-   thumb  string  imagem 500px (srcset — telas pequenas)
+   slug   string  nome-base das imagens em assets/images/produtos/
+                  (existem 4 larguras .webp + 1 .jpg de fallback —
+                  o srcset é montado sozinho em AF.imgSet)
    badge  string  selo do card (opcional)
    note   string  linha curta de detalhe técnico
    tags   array   termos extras que a busca também considera
@@ -40,8 +41,7 @@ AF.PRODUCTS = [
     cat: "colares",
     price: 139.9,
     old: 169.9,
-    img: "assets/images/produtos/colar-olho-grego.jpg",
-    thumb: "assets/images/produtos/colar-olho-grego-sm.jpg",
+    slug: "colar-olho-grego",
     badge: "Mais vendido",
     note: "Corrente veneziana 45cm · madrepérola natural",
     tags: ["olho grego", "protecao", "madreperola", "veneziana", "amuleto"],
@@ -51,8 +51,7 @@ AF.PRODUCTS = [
     name: "Anel Solitário Cravejado",
     cat: "aneis",
     price: 129.9,
-    img: "assets/images/produtos/anel-solitario.jpg",
-    thumb: "assets/images/produtos/anel-solitario-sm.jpg",
+    slug: "anel-solitario",
     note: "Zircônia central · aro cravejado",
     tags: ["solitario", "zirconia", "noivado", "pedido"],
   },
@@ -61,8 +60,7 @@ AF.PRODUCTS = [
     name: "Colar Borboleta Cravejada",
     cat: "colares",
     price: 119.9,
-    img: "assets/images/produtos/colar-borboleta.jpg",
-    thumb: "assets/images/produtos/colar-borboleta-sm.jpg",
+    slug: "colar-borboleta",
     badge: "Novo",
     note: "Pingente fixo · asa cravejada em zircônias",
     tags: ["borboleta", "delicado", "zirconia", "leveza"],
@@ -72,8 +70,7 @@ AF.PRODUCTS = [
     name: "Anel Inicial Cravejado",
     cat: "aneis",
     price: 159.9,
-    img: "assets/images/produtos/anel-inicial.jpg",
-    thumb: "assets/images/produtos/anel-inicial-sm.jpg",
+    slug: "anel-inicial",
     badge: "Personalizável",
     note: "Escolha a letra · chapa oval cravejada",
     tags: ["inicial", "letra", "monograma", "personalizado", "signet"],
@@ -84,8 +81,7 @@ AF.PRODUCTS = [
     cat: "conjuntos",
     price: 189.9,
     old: 219.9,
-    img: "assets/images/produtos/conjunto-coracao.jpg",
-    thumb: "assets/images/produtos/conjunto-coracao-sm.jpg",
+    slug: "conjunto-coracao",
     note: "Colar + brincos · zircônias cravejadas",
     tags: ["coracao", "conjunto", "presente", "namorada"],
   },
@@ -94,8 +90,7 @@ AF.PRODUCTS = [
     name: "Colar Malha Fita",
     cat: "colares",
     price: 179.9,
-    img: "assets/images/produtos/colar-malha.jpg",
-    thumb: "assets/images/produtos/colar-malha-sm.jpg",
+    slug: "colar-malha",
     note: "Malha lisa espelhada · 45cm",
     tags: ["malha", "fita", "herringbone", "espelhado", "liso"],
   },
@@ -104,8 +99,7 @@ AF.PRODUCTS = [
     name: "Pulseira Ajustável Veneziana",
     cat: "pulseiras",
     price: 109.9,
-    img: "assets/images/produtos/pulseiras-mix.jpg",
-    thumb: "assets/images/produtos/pulseiras-mix-sm.jpg",
+    slug: "pulseiras-mix",
     note: "Fecho deslizante · serve em qualquer pulso",
     tags: ["pulseira", "ajustavel", "veneziana", "mix", "camadas"],
   },
@@ -114,8 +108,7 @@ AF.PRODUCTS = [
     name: "Colar Medalha São Bento",
     cat: "colares",
     price: 149.9,
-    img: "assets/images/produtos/colares-medalhas.jpg",
-    thumb: "assets/images/produtos/colares-medalhas-sm.jpg",
+    slug: "colares-medalhas",
     note: "Medalha em prata · corrente cartier",
     tags: ["sao bento", "medalha", "fe", "pai nosso", "religioso"],
   },
@@ -125,8 +118,7 @@ AF.PRODUCTS = [
     cat: "conjuntos",
     price: 249.9,
     old: 289.9,
-    img: "assets/images/produtos/conjunto-esmeralda.jpg",
-    thumb: "assets/images/produtos/conjunto-esmeralda-sm.jpg",
+    slug: "conjunto-esmeralda",
     badge: "Edição limitada",
     note: "Colar + brincos + anel · zircônia verde",
     tags: ["esmeralda", "verde", "conjunto", "formatura", "realeza"],
@@ -136,8 +128,7 @@ AF.PRODUCTS = [
     name: "Pulseira Baby Personalizada",
     cat: "personalizados",
     price: 149.9,
-    img: "assets/images/produtos/pulseira-baby.jpg",
-    thumb: "assets/images/produtos/pulseira-baby-sm.jpg",
+    slug: "pulseira-baby",
     badge: "Gravação inclusa",
     note: "Nome gravado a laser · tamanho infantil",
     tags: ["baby", "bebe", "nome", "gravacao", "personalizado", "maternidade"],
@@ -147,8 +138,7 @@ AF.PRODUCTS = [
     name: "Pulseira Nome com Símbolo",
     cat: "personalizados",
     price: 169.9,
-    img: "assets/images/produtos/pulseira-nome.jpg",
-    thumb: "assets/images/produtos/pulseira-nome-sm.jpg",
+    slug: "pulseira-nome",
     note: "Nome + símbolo vazado à escolha",
     tags: ["nome", "personalizada", "borboleta", "gravacao", "presente"],
   },
@@ -157,8 +147,7 @@ AF.PRODUCTS = [
     name: "Brinco Coração Cravejado",
     cat: "brincos",
     price: 89.9,
-    img: "assets/images/produtos/brinco-coracao.jpg",
-    thumb: "assets/images/produtos/brinco-coracao-sm.jpg",
+    slug: "brinco-coracao",
     note: "Tarraxa de pressão · uso diário",
     tags: ["brinco", "coracao", "pequeno", "zirconia", "delicado"],
   },
@@ -167,8 +156,7 @@ AF.PRODUCTS = [
     name: "Anel Esmeralda Cravejado",
     cat: "aneis",
     price: 169.9,
-    img: "assets/images/produtos/anel-esmeralda.jpg",
-    thumb: "assets/images/produtos/anel-esmeralda-sm.jpg",
+    slug: "anel-esmeralda",
     note: "Zircônia verde oval · aro cravejado",
     tags: ["esmeralda", "verde", "anel", "formatura"],
   },
@@ -178,13 +166,39 @@ AF.PRODUCTS = [
     cat: "aneis",
     price: 199.9,
     old: 239.9,
-    img: "assets/images/produtos/anel-duplo.jpg",
-    thumb: "assets/images/produtos/anel-duplo-sm.jpg",
+    slug: "anel-duplo",
     badge: "Kit",
     note: "Dois anéis para empilhar · zircônias",
     tags: ["duo", "kit", "empilhavel", "falange", "aparador"],
   },
 ];
+
+/* ---------- Imagens ---------- */
+
+/* Larguras geradas para os produtos (assets/images/produtos/).
+   O celular pega 320 ou 480; o desktop retina pega 900.
+   O JPEG de 640 existe só para navegadores sem suporte a WebP. */
+AF.IMG_WIDTHS = [320, 480, 640, 900];
+AF.IMG_FALLBACK = 640;
+
+var IMG_DIR = "assets/images/produtos/";
+
+/* srcset em WebP: "arquivo-320.webp 320w, arquivo-480.webp 480w, ..." */
+AF.imgSet = function (slug) {
+  return AF.IMG_WIDTHS.map(function (w) {
+    return IMG_DIR + slug + "-" + w + ".webp " + w + "w";
+  }).join(", ");
+};
+
+/* caminho do JPEG de fallback */
+AF.imgFallback = function (slug) {
+  return IMG_DIR + slug + "-" + AF.IMG_FALLBACK + ".jpg";
+};
+
+/* miniatura leve, usada no carrinho (74px na tela) */
+AF.imgThumb = function (slug) {
+  return IMG_DIR + slug + "-320.webp";
+};
 
 /* ---------- Utilitários ---------- */
 
