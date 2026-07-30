@@ -33,23 +33,23 @@ estimativas coerentes com esse valor e precisam da sua revisão.
 
 ---
 
-### 3. Trocar `SEU-USUARIO` nas meta tags
+### 3. ~~Trocar o placeholder das meta tags~~ ✅ feito
 
-O `index.html` tem **8 ocorrências** de `SEU-USUARIO`, nas tags `canonical`,
-`og:*`, `twitter:*` e no JSON-LD. Troque pelo seu usuário do GitHub.
+As URLs já apontam para `https://rangel202.github.io/use-afrodite-pratas/`
+nas tags `canonical`, `og:*`, `twitter:*` e no JSON-LD.
 
-Isso não é cosmético: **Open Graph exige URL absoluta**. Com caminho relativo,
-o link compartilhado no WhatsApp e no Instagram aparece sem imagem de
-prévia. Para trocar tudo de uma vez no PowerShell:
+**Ao migrar para domínio próprio**, troque as 7 ocorrências:
 
 ```powershell
 $p = "index.html"
-(Get-Content $p -Raw -Encoding UTF8).Replace("SEU-USUARIO", "seu-usuario-real") |
-  Set-Content $p -Encoding UTF8 -NoNewline
+(Get-Content $p -Raw -Encoding UTF8).Replace(
+  "https://rangel202.github.io/use-afrodite-pratas",
+  "https://useafroditepratas.com.br"
+) | Set-Content $p -Encoding UTF8 -NoNewline
 ```
 
-Quando tiver domínio próprio, troque `https://seu-usuario.github.io/use-afrodite-pratas`
-por `https://useafroditepratas.com.br`.
+Lembre que **Open Graph exige URL absoluta** — com caminho relativo o link
+compartilhado no WhatsApp e no Instagram aparece sem imagem de prévia.
 
 ---
 
@@ -68,28 +68,25 @@ Depois acesse `http://localhost:4321`.
 
 ## Publicar no GitHub Pages
 
-O repositório local já está pronto (branch `main`, commit inicial feito).
+Repositório: https://github.com/Rangel202/use-afrodite-pratas
 
-**1. Crie o repositório vazio** em https://github.com/new
-com o nome `use-afrodite-pratas`, visibilidade **Public**.
-Não marque "Add a README" — o projeto já tem um.
+O `origin` já está configurado e os commits estão prontos na branch `main`.
 
-**2. Conecte e envie** (troque `SEU-USUARIO`):
+**1. Envie:**
 
 ```bash
-git remote add origin https://github.com/SEU-USUARIO/use-afrodite-pratas.git
 git push -u origin main
 ```
 
-Na primeira vez o Git abre o navegador para você autorizar sua conta
-(Git Credential Manager). Você autentica direto no GitHub.
+Na primeira vez o Git abre o navegador para você autorizar a conta
+(Git Credential Manager) — a autenticação acontece no site do GitHub.
 
-**3. Ligue o Pages**: no repositório → **Settings** → **Pages** →
+**2. Ligue o Pages**: no repositório → **Settings** → **Pages** →
 em "Source" escolha **Deploy from a branch** → branch `main`, pasta `/ (root)`
 → **Save**.
 
 Em 1–2 minutos o site fica no ar em:
-`https://SEU-USUARIO.github.io/use-afrodite-pratas/`
+`https://rangel202.github.io/use-afrodite-pratas/`
 
 O arquivo `.nojekyll` na raiz desliga o processamento Jekyll, que é
 desnecessário aqui e só deixaria o deploy mais lento.
